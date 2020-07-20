@@ -485,6 +485,21 @@ class UrlManager extends BaseUrlManager
     {
         if ($this->enableLanguageDetection) {
             foreach ($this->_request->getAcceptableLanguages() as $acceptable) {
+
+                $lang = str_replace('_', '-', strtolower($acceptable));
+                if($lang == 'en-gb' || $lang == 'en-uk'){
+                    return 'en-GB';
+                }
+                $country = '';
+                if(strpos($lang, '-') !== false){
+                    list($lang, $country) = explode('-', $lang, 2);
+                    //$lang = substr($lang, 0, 2);
+                }
+                $europe = ['it','be','bg','cz','dk','ee','ie','el','es','fr','hr','cy','lv','lt','lu','hu','mt','nl','at','pl','pt','ro','si','sk','fi','se','no','ch','li','is','al','rs','tr'];
+                if(in_array($lang, $europe) || in_array($country, $europe)){
+                    return 'en-EU';
+                }
+
                 list($language,$country) = $this->matchCode($acceptable);
                 if ($language!==null) {
                     $language = $country === null ? $language : "$language-$country";
